@@ -623,6 +623,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		"balls_efficiency" = CUM_EFFICIENCY,
 		"has_breasts" = FALSE,
 		"breasts_color" = "ffffff",
+		"nipple_color" = "ffffff",
 
 		"has_butt" = FALSE,
 		"butt_color" = "ffffff",
@@ -859,6 +860,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["feature_breasts_size"]			>> features["breasts_size"]
 	S["feature_breasts_shape"]			>> features["breasts_shape"]
 	S["feature_breasts_color"]			>> features["breasts_color"]
+	S["feature_nipple_color"]			>> features["nipple_color"]
 	S["feature_breasts_producing"]		>> features["breasts_producing"]
 	S["feature_breasts_visibility"]		>> features["breasts_visibility"]
 	S["feature_breasts_visibility_flags"] >> features["breasts_visibility_flags"]
@@ -1208,17 +1210,18 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	features["butt_color"]                = sanitize_hexcolor(features["butt_color"], 6, FALSE, "FFFFFF")
 	features["belly_color"]               = sanitize_hexcolor(features["belly_color"], 6, FALSE, "FFFFFF")
 	features["breasts_color"]             = sanitize_hexcolor(features["breasts_color"], 6, FALSE, "FFFFFF")
+	features["nipple_color"]              = sanitize_hexcolor(features["nipple_color"], 6, FALSE, "FFFFFF")
 	features["cock_color"]                = sanitize_hexcolor(features["cock_color"], 6, FALSE, "FFFFFF")
 	features["balls_color"]               = sanitize_hexcolor(features["balls_color"], 6, FALSE, "FFFFFF")
 	features["vag_color"]                 = sanitize_hexcolor(features["vag_color"], 6, FALSE, "FFFFFF")
 	features["butt_visibility"]           = sanitize_inlist(features["butt_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
-	features["belly_visibility"]          = sanitize_inlist(features["breasts_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
+	features["belly_visibility"]          = sanitize_inlist(features["belly_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
 	features["breasts_visibility"]        = sanitize_inlist(features["breasts_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
 	features["cock_visibility"]           = sanitize_inlist(features["cock_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
 	features["balls_visibility"]          = sanitize_inlist(features["balls_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
 	features["vag_visibility"]            = sanitize_inlist(features["vag_visibility"], safe_visibilities, GEN_VISIBLE_NO_UNDIES)
 	features["butt_visibility_flags"]     = sanitize_integer(features["butt_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
-	features["belly_visibility_flags"]    = sanitize_integer(features["breasts_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
+	features["belly_visibility_flags"]    = sanitize_integer(features["belly_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
 	features["breasts_visibility_flags"]  = sanitize_integer(features["breasts_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
 	features["cock_visibility_flags"]     = sanitize_integer(features["cock_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
 	features["balls_visibility_flags"]    = sanitize_integer(features["balls_visibility_flags"], GENITAL_FLAGS_MIN, GENITAL_FLAGS_MAX, GEN_VIS_FLAG_DEFAULT)
@@ -1479,6 +1482,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["feature_breasts_size"], features["breasts_size"])
 	WRITE_FILE(S["feature_breasts_shape"], features["breasts_shape"])
 	WRITE_FILE(S["feature_breasts_color"], features["breasts_color"])
+	WRITE_FILE(S["feature_nipple_color"], features["nipple_color"])
 	WRITE_FILE(S["feature_breasts_producing"], features["breasts_producing"])
 	WRITE_FILE(S["feature_breasts_visibility"], features["breasts_visibility"])
 	WRITE_FILE(S["feature_breasts_visibility_flags"], features["breasts_visibility_flags"])

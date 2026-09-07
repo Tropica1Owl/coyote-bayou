@@ -56,6 +56,7 @@
 		"balls_efficiency" = CUM_EFFICIENCY,\
 		"has_breasts" = FALSE,\
 		"breasts_color" = "ffffff",\
+		"nipple_color" = "ffffff",\
 		"breasts_size" = BREASTS_SIZE_DEF,\
 		"breasts_shape" = DEF_BREASTS_SHAPE,\
 		"breasts_producing" = FALSE,\
@@ -3668,6 +3669,17 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 							features["breasts_color"] = pref_species.default_color
 						else if(ReadHSV(temp_hsv)[3] >= ReadHSV(MINIMUM_MUTANT_COLOR)[3])
 							features["breasts_color"] = sanitize_hexcolor(new_breasts_color, 6)
+						else
+							to_chat(user,span_danger("Invalid color. Your color is not bright enough."))
+				
+				if("nipple_color")
+					var/new_nipple_color = input(user, "Nipple Color:", "Character Preference","#"+features["nipple_color"]) as color|null
+					if(new_nipple_color)
+						var/temp_hsv = RGBtoHSV(new_nipple_color)
+						if(new_nipple_color == "#000000")
+							features["nipple_color"] = pref_species.default_color
+						else if(ReadHSV(temp_hsv)[3] >= ReadHSV(MINIMUM_MUTANT_COLOR)[3])
+							features["nipple_color"] = sanitize_hexcolor(new_nipple_color, 6)
 						else
 							to_chat(user,span_danger("Invalid color. Your color is not bright enough."))
 

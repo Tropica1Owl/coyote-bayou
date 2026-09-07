@@ -155,6 +155,11 @@
 	icon_state = "pairround"
 	name = "Pair(round)"
 
+/datum/sprite_accessory/breasts/rounder
+	icon = 'modular_fox/icons/obj/genitals/breasts_onmob.dmi'
+	icon_state = "pair"
+	name = "Pair (New)"
+
 //BUTT BE HERE
 /datum/sprite_accessory/butt
 	icon = 'icons/obj/genitals/butt_onmob.dmi'

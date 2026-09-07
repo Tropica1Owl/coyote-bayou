@@ -249,6 +249,19 @@
 						action=recolor'>
 							[color]
 				</a>"}
+
+	if (istype(src, /obj/item/organ/genital/breasts))
+		dat += "<div class='gen_setting_name'>Nipple Color:</div>"
+		dat += {"<a 
+					class='clicky'
+					style='
+						background-color:[owner.dna.features["nipple_color"]]' 
+					href='
+						?src=[REF(src)];
+						action=recolor_nipples'>
+							[owner.dna.features["nipple_color"]]
+				</a>"}
+
 	if(CHECK_BITFIELD(genital_flags, GENITAL_CAN_RESHAPE))
 		anythingatall = TRUE
 		dat += "<div class='gen_setting_name'>Shape:</div>"
@@ -315,6 +328,15 @@
 				else
 					to_chat(usr,span_danger("Invalid color! Your color is not bright enough."))
 			get_genital_panel()
+		if ("recolor_nipples")
+			var/new_color = input(usr, "Recolor:.", "Character Preference","[owner.dna.features["nipple_color"]]") as color|null
+			if(new_color)
+				var/temp_hsv = RGBtoHSV(new_color)
+				if(ReadHSV(temp_hsv)[3] >= ReadHSV(MINIMUM_MUTANT_COLOR)[3])
+					owner.dna.features["nipple_color"] = sanitize_hexcolor(new_color, 6, TRUE)
+					to_chat(usr,span_notice("New nipple color set!"))
+				else
+					to_chat(usr,span_danger("Invalid color! Your color is not bright enough."))
 		if("resize")
 			resize_genital(usr)
 			get_genital_panel()
@@ -600,6 +622,14 @@ GLOBAL_LIST_INIT(genital_layers, list(
 			var/image/genital_overlay = mutable_appearance(grundle_out ? grundle_out : accessory_icon, genital_state, layer = -layer_to_put_it)
 			var/image/gross_image = image(grundle_out ? grundle_out : accessory_icon, src, genital_state, layer = -layer_to_put_it) // mutable appearances just... dont work for client images. rip performance
 
+			if(istype(sprite_acc, /datum/sprite_accessory/breasts/rounder))
+				var/mutable_appearance/areola = mutable_appearance(accessory_icon, layer = -layer)
+				var/size = clamp(nad.cached_size, 0, 17)
+				areola.color = "#[dna.features["nipple_color"]]"
+				areola.icon_state = "m_[nad.slot]_[sprite_acc.icon_state]_[size][(src.dna.species.use_skintones && !src.dna.skin_tone_override) ? "_s" : ""]_[position]_secondary"
+				areola.layer = -layer_to_put_it + 1
+
+
 			if(do_center)
 				genital_overlay = center_image(genital_overlay, dim_x, dim_y)
 				gross_image = center_image(genital_overlay, dim_x, dim_y)
@@ -646,17 +676,20 @@ GLOBAL_LIST_INIT(genital_layers, list(
 		if(src.dna.species.fixed_mut_color)
 			dna.features["cock_color"] = "[dna.species.fixed_mut_color]"
 			dna.features["breasts_color"] = "[dna.species.fixed_mut_color]"
+			dna.features["nipple_color"] = "[dna.species.fixed_mut_color]"
 			dna.features["butt_color"] = "[dna.species.fixed_mut_color]"
 			dna.features["belly_color"] = "[dna.species.fixed_mut_color]"
 			return
 		//So people who haven't set stuff up don't get rainbow surprises.
 		dna.features["cock_color"] = "[dna.features["mcolor"]]"
 		dna.features["breasts_color"] = "[dna.features["mcolor"]]"
+		dna.features["nipple_color"] = "[dna.features["mcolor"]]"
 		dna.features["butt_color"] = "[dna.features["mcolor"]]"
 		dna.features["belly_color"] = "[dna.features["mcolor"]]"
 	else //If there's a new organ, make it the same colour.
 		if(breastCheck == FALSE)
 			dna.features["breasts_color"] = dna.features["cock_color"]
+			dna.features["nipple_color"] = dna.features["cock_color"]
 		else if (willyCheck == FALSE)
 			dna.features["cock_color"] = dna.features["breasts_color"]
 		else if (buttCheck == FALSE)

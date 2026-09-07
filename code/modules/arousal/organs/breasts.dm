@@ -190,6 +190,7 @@ GLOBAL_LIST_INIT(massive_breast_descriptors, list(
 		color = "#[D.features["breasts_color"]]"
 	size = D.features["breasts_size"]
 	shape = D.features["breasts_shape"]
+	// secondary_color = D.features["nipple_color"]
 	if(!D.features["breasts_producing"])
 		DISABLE_BITFIELD(genital_flags, GENITAL_FLUID_PRODUCTION|CAN_MASTURBATE_WITH)
 	if(!isnum(size))
@@ -244,6 +245,14 @@ GLOBAL_LIST_INIT(massive_breast_descriptors, list(
 		if("BEHIND")
 			. = ..()
 
+/obj/item/organ/genital/breasts/get_icon_state(mob/living/carbon/M, datum/sprite_accessory/S, aroused_state, layertext)
+	// If its the new sprites, we return with the original format:
+	if (istype(S, /datum/sprite_accessory/breasts/rounder))
+		var/size = clamp(cached_size, 0, 17)
+		return "m_[slot]_[S.icon_state]_[size][(M.dna.species.use_skintones && !M.dna.skin_tone_override) ? "_s" : ""]_[layertext]_primary"
+
+	// Return original
+	. = ..()
 
 #undef BREASTS_ICON_MIN_SIZE
 #undef BREASTS_ICON_MAX_SIZE
