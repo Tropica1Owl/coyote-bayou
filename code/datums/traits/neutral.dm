@@ -1052,8 +1052,8 @@
 	SEND_SIGNAL(src, COMSIG_CLOTHING_FIX, usr)
 	verbs -= /obj/item/clothing/proc/FixClothesFit
 
-#define	CLOTHING_FIX_TIME_MIN 10 MINUTES
-#define CLOTHING_FIX_TIME_MAX 15 MINUTES 
+#define	CLOTHING_FIX_TIME_MIN 30 SECONDS
+#define CLOTHING_FIX_TIME_MAX 5 MINUTES
 
 /datum/quirk/dan_nicki
 	name = "Big Boobs"
@@ -1068,29 +1068,14 @@
 	var/debufftimer = null
 	var/warningtimer = null
 	var/active = FALSE
-	var/datum/status_effect/debuff = /datum/status_effect/dan_nicki
-	var/warning_text = "Your clothes are getting a little tight..."
 	var/unfix_text = "Your clothes feel way too tight to breathe! You'll need to fix their fit using their context menu."
 	var/fix_text = "You feel like you can breathe again. That's much better."
 	var/drop_text = "Whew... free at last!"
 
-/datum/status_effect/dan_nicki
-	id = "Constriction"
-	duration = -1
-	alert_type = null
-	status_type = STATUS_EFFECT_UNIQUE
-
-/datum/status_effect/dan_nicki/tick()
-	. = ..()
-	owner.adjustOxyLoss(0.5)
-
 /datum/quirk/dan_nicki/proc/make_timers()
 	deltimer(debufftimer)
-	deltimer(warningtimer)
 	var/time_til_debuff = rand(CLOTHING_FIX_TIME_MIN, CLOTHING_FIX_TIME_MAX)
-	var/time_til_warning = time_til_debuff - (1 MINUTES)
 	debufftimer = addtimer(CALLBACK(src, PROC_REF(unfixclothes)), time_til_debuff, TIMER_DELETE_ME | TIMER_STOPPABLE)
-	warningtimer = addtimer(CALLBACK(src, PROC_REF(warn)), time_til_warning, TIMER_DELETE_ME | TIMER_STOPPABLE)
 
 /datum/quirk/dan_nicki/add()
 	. = ..()
@@ -1099,13 +1084,11 @@
 /datum/quirk/dan_nicki/remove()
 	. = ..()
 	deltimer(debufftimer)
-	deltimer(warningtimer)
 
 /datum/quirk/dan_nicki/proc/unfixclothes()
 	var/mob/living/H = quirk_holder
 	var/obj/item/clothing/under/prison = H.get_item_by_slot(SLOT_W_UNIFORM)
 	if(prison)
-		H.apply_status_effect(debuff)
 		prison.verbs += /obj/item/clothing/proc/FixClothesFit
 		RegisterSignal(prison, COMSIG_CLOTHING_FIX, PROC_REF(on_fix))
 		RegisterSignal(prison, COMSIG_ITEM_DROPPED, PROC_REF(on_drop))
@@ -1114,19 +1097,14 @@
 	else
 		make_timers()
 
-/datum/quirk/dan_nicki/proc/warn()
-	if(quirk_holder.get_item_by_slot(SLOT_W_UNIFORM))
-		to_chat(quirk_holder, span_warning(warning_text))
-
 /datum/quirk/dan_nicki/proc/on_fix(obj/item/source, mob/user)
 	var/mob/living/H = user
 	if(!istype(H))
 		return
 	if(!active || H.get_item_by_slot(SLOT_W_UNIFORM) != source)
 		return
-	H.remove_status_effect(debuff)
 	to_chat(H, span_green(fix_text))
-	display_fix_text(user, source)
+	display_fix_text(source, user)
 	active = FALSE
 	make_timers()
 	playsound(H, "rustle", 50, TRUE)
@@ -1137,9 +1115,8 @@
 		return
 	if(!active || H.get_item_by_slot(SLOT_W_UNIFORM))
 		return
-	H.remove_status_effect(debuff)
 	to_chat(H, span_green(drop_text))
-	display_drop_text(user, source)
+	display_drop_text(source, user)
 	var/obj/item/clothing/S = source
 	S.verbs -= /obj/item/clothing/proc/FixClothesFit
 	active = FALSE
@@ -1165,8 +1142,6 @@
 	conflicts = list()
 	gain_text = span_notice("The heavy swingers between your legs strain your clothes.")
 	lose_text = span_notice("Your clothes feel looser.")
-	debuff = /datum/status_effect/wreckingballs
-	warning_text = "Your clothes are getting a little tight..."
 	unfix_text = "Your clothes feel way too tight to move! You'll need to fix their fit using their context menu."
 	fix_text = "You feel like you can move your legs again. That's much better."
 	drop_text = "Whew... free at last!"
@@ -1176,25 +1151,6 @@
 
 /datum/quirk/dan_nicki/wreckingballs/display_drop_text(obj/item/source, mob/user)
 	user.visible_message(span_info("[user] undoes [user.p_their()] [source], giving [user.p_their()] groin some relief!"))
-
-/datum/status_effect/wreckingballs
-	id = "Constriction"
-	duration = -1
-	alert_type = null
-	status_type = STATUS_EFFECT_UNIQUE
-
-/datum/status_effect/wreckingballs/on_apply()
-	. = ..()
-	owner.add_movespeed_modifier(/datum/movespeed_modifier/wreckingballs, TRUE, "wreckingballs")
-
-/datum/status_effect/wreckingballs/on_remove()
-	. = ..()
-	owner.remove_movespeed_modifier("wreckingballs", update = TRUE)
-
-/datum/movespeed_modifier/wreckingballs
-	flags = IGNORE_NOSLOW
-	variable = TRUE
-	multiplicative_slowdown = 0.3
 
 /datum/quirk/dan_nicki/hugecock
 	name = "Big Dick"
@@ -1206,32 +1162,9 @@
 	conflicts = list()
 	gain_text = span_notice("You feel your clothes stretch around your extra leg.")
 	lose_text = span_notice("Your clothes feel looser.")
-	debuff = /datum/status_effect/hotrod
-	warning_text = "Your clothes are getting a little tight..."
 	unfix_text = "Your clothes feel way too tight to reach into your pockets! You'll need to fix their fit using their context menu."
 	fix_text = "You feel like you can reach into your pockets again. That's much better."
 	drop_text = "Whew... free at last!"
-
-/datum/status_effect/hotrod
-	id = "Constriction"
-	duration = -1
-	alert_type = null
-	status_type = STATUS_EFFECT_UNIQUE
-
-/datum/status_effect/hotrod/on_apply()
-	. = ..()
-	RegisterSignal(owner, COMSIG_MOB_CLICKON, PROC_REF(on_clickon))
-
-/datum/status_effect/hotrod/on_remove()
-	. = ..()
-	UnregisterSignal(owner, COMSIG_MOB_CLICKON)
-
-/datum/status_effect/hotrod/proc/on_clickon(atom/A, params)
-
-	var/obj/item/left = owner.get_item_by_slot(SLOT_L_STORE)
-	var/obj/item/right = owner.get_item_by_slot(SLOT_R_STORE)
-	if(params == left || params == right)
-		return COMSIG_MOB_CANCEL_CLICKON
 
 /datum/quirk/dan_nicki/hugecock/display_fix_text(obj/item/source, mob/user)
 	user.visible_message(span_info("[user] adjusts [user.p_their()] [source.name] a bit to give some room down south!"))
@@ -1249,29 +1182,9 @@
 	conflicts = list()
 	gain_text = span_notice("You feel your lower body being compressed by your clothes.")
 	lose_text = span_notice("Your clothes feel looser.")
-	debuff = /datum/status_effect/toomuchcake
-	warning_text = "Your clothes are getting a little tight..."
 	unfix_text = "Your clothes feel way too tight! You'll need to fix their fit using their context menu."
 	fix_text = "You feel more comfortable in your clothes again. That's much better."
 	drop_text = "Whew... free at last!"
-
-/datum/status_effect/toomuchcake
-	id = "Constriction"
-	duration = -1
-	alert_type = null
-	status_type = STATUS_EFFECT_UNIQUE
-
-/datum/status_effect/toomuchcake/on_apply()
-	. = ..()
-	SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "toomuchcake", /datum/mood_event/toomuchcake)
-
-/datum/status_effect/toomuchcake/on_remove()
-	. = ..()
-	SEND_SIGNAL(owner, COMSIG_CLEAR_MOOD_EVENT, "toomuchcake")
-
-/datum/mood_event/toomuchcake
-	mood_change = -4
-	description = span_warning("These clothes are way too tight!")
 
 /datum/quirk/dan_nicki/cake/display_fix_text(obj/item/source, mob/user)
 	user.visible_message(span_info("[user] adjusts the back of [user.p_their()] [source.name], squirming a bit to get comfort!"))
