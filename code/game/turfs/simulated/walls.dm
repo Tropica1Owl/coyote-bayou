@@ -504,9 +504,9 @@
 	if(!istype(AboveT, /turf/open/transparent/openspace))
 		to_chat(user, "You can't get here, there is \a [ceilingeleephant] in the way!") // (0)
 		return
-	if(istype(targetDest, /turf/open/transparent/openspace))
-		to_chat(user, span_warning("There's nothing to stand on up there!"))
-		return
+//	if(istype(targetDest, /turf/open/transparent/openspace))  --- COMMENTED BECAUSE YOU *CAN* STAND ON WALLS, AND GUESS WHAT? *THIS ENTIRE THING IS CALLED BY WALLS TO BEGIN WITH!!!*
+//		to_chat(user, span_warning("There's nothing to stand on up there!"))
+//		return
 	if(istype(targetDest, /turf/closed) || istype(AboveT, /turf/closed))
 		to_chat(user, span_warning("On top of the wall seems to be more wall! You can't get up there")) // (1)
 		return

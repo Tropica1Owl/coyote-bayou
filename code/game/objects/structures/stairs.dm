@@ -242,7 +242,7 @@
 	resistance_flags = NONE
 	icon_state_override = "brickpile"
 	indestructible = FALSE
-	destroy_in = 15 MINUTES
+	destroy_in = 1440 MINUTES // Brick stairs for a whole day, yippee!
 	icon_state_override = "brickpile"
 	spawn_on_break = /obj/item/ammo_casing/caseless/brick
 
