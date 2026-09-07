@@ -488,7 +488,7 @@
 	mob_overlay_icon = 'icons/fallout/onmob/clothes/belt.dmi'
 	icon_state = "outlaws_cloak"
 	inhand_icon_state = "outlaws_cloak"
-	body_parts_covered = CHEST|GROIN|ARMS
+	body_parts_covered = NONE
 	slot_flags = INV_SLOTBIT_NECK
 	component_type = /datum/component/storage/concrete/neckpron/specialized/gun
 
